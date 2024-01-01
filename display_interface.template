@@ -1,0 +1,24 @@
+Value INTERFACE (\S+)
+Value interface_state (\S+)
+Value line_protocol_state (\S+)
+Value port_bw (\S+)
+Value transceiver_max_bw (\S+)
+Value transceiver_mode (\S+)
+Value wavelength (\S+)
+Value transmission_distance (\S+)
+Value rx_power (.+)
+Value tx_power (.+)
+Value last_physical_down_time ((\d{4}-\d{2}-\d{2}))
+Value input_bandwidth_utilization (\S+)
+Value output_bandwidth_utilization (\S+)
+
+Start
+  ^${INTERFACE} current state : ${interface_state}.*
+  ^Line protocol current state : ${line_protocol_state} 
+  ^Port BW: ${port_bw}, Transceiver max BW: ${transceiver_max_bw}, Transceiver Mode: ${transceiver_mode}
+  ^WaveLength: ${wavelength}, Transmission Distance: ${transmission_distance}
+  ^Rx Power: ${rx_power}dBm, Warning range: .*
+  ^Tx Power: ${tx_power}dBm, Warning range: .*
+  ^Last physical down time : ${last_physical_down_time}
+  ^\s+(Input bandwidth utilization  :|Last 300 seconds input utility rate:)\s+${input_bandwidth_utilization}
+  ^\s+(Output bandwidth utilization :|Last 300 seconds output utility rate:)\s+${output_bandwidth_utilization} -> Record

@@ -1,0 +1,7 @@
+Value PEER (\s+\d+\.\d+\.\d+\.\d+)
+Value VER (\d+)
+Value AS (\d+)
+Value STATUS (Established|Idle)
+
+Start
+ ^${PEER}\s+${VER}\s+${AS}.*${STATUS}\s+\d+ -> Record

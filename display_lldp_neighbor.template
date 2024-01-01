@@ -1,0 +1,9 @@
+Value LOCAL_INTERFACE (\S+(?:\s\S+)?)
+Value NEIGHBOR_PORT_ID (.*?)
+Value NEIGHBOR (.+?)
+
+Start
+  ^${LOCAL_INTERFACE}\s+has\s+(\d+)\s+neighbor.*
+  ^(Port ID\s+:|PortId:\s*)${NEIGHBOR_PORT_ID}\s*$$
+  ^(System name\s+:|SysName:\s+)${NEIGHBOR}\s*$$
+  ^(SysDesc:\s+|System description\s+:) -> Record Start
