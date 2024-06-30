@@ -1,0 +1,34 @@
+Value INTERFACE (\S+)
+Value interface_state (\S+)
+Value line_protocol_state (\S+)
+Value Description (\S+)
+Value IP_ADDRESS (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2})
+Value port_bw (\S+)
+Value transceiver_max_bw (\S+)
+Value transceiver_mode (\S+)
+Value wavelength (\S+)
+Value transmission_distance (\S+)
+Value List rx_power ([-\d.]+)
+Value List tx_power ([-\d.]+)
+Value last_physical_down_time ((\d{4}-\d{2}-\d{2}))
+Value input_bandwidth_utilization (\S+)
+Value output_bandwidth_utilization (\S+)
+
+Start
+  ^${INTERFACE} current state : ${interface_state}.*
+  ^Line protocol current state : ${line_protocol_state} 
+  ^Description: ${Description}
+  ^Internet Address is ${IP_ADDRESS}
+  ^Port BW: ${port_bw}, Transceiver max BW: ${transceiver_max_bw}, Transceiver Mode: ${transceiver_mode}
+  ^Port BW: ${port_bw}
+  #^Port BW: ${port_bw}(?:, Transceiver max BW: ${transceiver_max_bw}, Transceiver Mode: ${transceiver_mode})?
+  ^WaveLength: ${wavelength}, Transmission Distance: ${transmission_distance}
+  ^Rx Power:\s+${rx_power}dBm, Warning range: .*
+  ^Tx Power:\s+${tx_power}dBm, Warning range: .*
+  # 用于匹配多个Rx/Tx读数
+  ^(Rx\d+ Power: \s*${rx_power}dBm, Tx\d+ Power: \s*${tx_power}dBm\n?)+
+  ^Last physical down time : ${last_physical_down_time}
+  ^\s+(Input bandwidth utilizationi  :|Last 300 seconds input utility rate:)\s+${input_bandwidth_utilization}
+  ^\s+(Output bandwidth utilizationi :|Last 300 seconds output utility rate:)\s+${output_bandwidth_utilization} -> Record
+
+

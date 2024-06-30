@@ -1,0 +1,10 @@
+VSI Name: {{ vsi_name }}
+PW Signaling: {{ pw_signaling }}
+VSI State: {{ vsi_state }}
+{% for interface in interfaces %}
+Interface Name: {{ interface.name }}
+State: {{ interface.state }}
+Ac Block State: {{ interface.ac_block_state }}
+Last Up Time: {{ interface.last_up_time }}
+Total Up Time: {{ interface.total_up_time }}
+{% endfor %}

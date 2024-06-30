@@ -1,0 +1,100 @@
+---
+- name: Basic config
+  gather_facts: false
+  hosts: CSR
+  vars_files:
+    - config_data.yaml
+
+  tasks:
+    - name: Configure host logging
+      cisco.ios.ios_logging:
+        dest: host
+        name: 192.168.68.250
+        state: present
+
+    - name: Configure host logging2
+      cisco.ios.ios_logging:
+        dest: host
+        name: 192.168.68.100
+        state: present
+
+    - name: Configure console logging level and facility
+      cisco.ios.ios_logging:
+        dest: console
+        facility: local5
+        level: debugging
+        state: present
+
+    - name: Configure name servers
+      cisco.ios.ios_system:
+        domain_name: qytang.com
+        name_servers:
+          - 8.8.8.8
+          - 114.114.114.114
+        state: present
+
+    - name: Configure users
+      cisco.ios.ios_user:
+        name: "{{ item.username }}"
+        privilege: "{{ item.privilege }}"
+        configured_password: "{{ item.secret }}"
+        state: present
+      loop:
+        - { username: qytadmin, privilege: 15, secret: Admin@123 }
+        - { username: qytangadmin, privilege: 1, secret: Admin@123 }
+
+    - name: Debug information
+      debug:
+        msg:
+         - "inventory_hostname: {{ inventory_hostname }}"
+         - "item.router: {{ item.router }}"
+      loop: "{{ csr_ifs }}"
+
+    - name: configuration interfaces 
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ item.port }}"
+            ipv4:
+              - address: "{{ item.ip }}"
+      with_items: "{{ csr_ifs }}"
+      when: (hostvars[inventory_hostname].ansible_host == item.router)
+
+    - name: up interfaces
+      cisco.ios.ios_interfaces:
+        config:
+          - name: "{{ item.port }}"
+            enabled: True
+      with_items: "{{ csr_ifs }}"
+      when: (hostvars[inventory_hostname].ansible_host == item.router)
+
+    - name: ospf router_id
+      cisco.ios.ios_config:
+        lines:
+          - router-id {{ item.routerid }}
+        parents: router ospf 1
+      with_items: "{{ csr_ospf_router_id }}"
+      when: (hostvars[inventory_hostname].ansible_host == item.router)
+
+    - name: ospf network
+      cisco.ios.ios_config:
+        lines:
+          - network {{ item.network }} {{item.mask}} area {{item.area}}
+        parents: router ospf 1
+      with_items: "{{ csr_ospf_nets }}"
+      when: (hostvars[inventory_hostname].ansible_host == item.router)
+
+    - name: Save your show command to register  # 保存show的命令
+      ios_command:
+        commands: 'show ip interface brief'
+      register: output_show_ip_interface_brief
+
+    - name: Copy output to file  # 把输出结果保存到文件
+      copy:
+        content: "{{ output_show_ip_interface_brief.stdout | replace('\\n', '\n') }}"
+        dest: /etc/ansible/output/{{ inventory_hostname }}_show_ip_interface_brief.txt
+
+    - name: SAVE CSRS CONFIG  # 任务名字
+      ios_config:  # 模块名字
+        backup: yes  # 是否备份
+        save_when: modified  # 当配置修改就保存配置
+

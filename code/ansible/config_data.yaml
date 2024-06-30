@@ -1,0 +1,15 @@
+csr_ifs:
+  - {router: 192.168.68.200, ip: 10.1.1.1/24, port: GigabitEthernet2}
+  - {router: 192.168.68.200, ip: 1.1.1.1/32, port: loopback0}
+  - {router: 192.168.68.201, ip: 10.1.1.2/24, port: GigabitEthernet2}
+  - {router: 192.168.68.201, ip: 2.2.2.2/32, port: loopback0}	
+
+csr_ospf_router_id:
+  - {router: 192.168.68.200, routerid: 1.1.1.1}
+  - {router: 192.168.68.201, routerid: 2.2.2.2}
+
+csr_ospf_nets:
+  - {router: 192.168.68.200, area: 0, mask: 0.0.0.255, network: 10.1.1.1}
+  - {router: 192.168.68.200, area: 0, mask: 0.0.0.0, network: 1.1.1.1}
+  - {router: 192.168.68.201, area: 0, mask: 0.0.0.255, network: 10.1.1.2}
+  - {router: 192.168.68.201, area: 0, mask: 0.0.0.0, network: 2.2.2.2}	

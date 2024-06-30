@@ -1,0 +1,6 @@
+Value LOCAL_INTERFACE (\S+)
+Value NEIGHBOR (.+?)
+Value NEIGHBOR_INTERFACE (.*?)
+
+Start
+  ^\s*${LOCAL_INTERFACE}\s+${NEIGHBOR}\s+${NEIGHBOR_INTERFACE}\s+\d+ -> Record

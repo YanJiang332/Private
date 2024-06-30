@@ -1,0 +1,22 @@
+Value VPN_INSTANCE_NAME_AND_ID (\S+,\s\d+)
+Value INTERFACE (\S+)
+Value ROUTE_DISTINGUISHER (\d+:\d+)
+Value EXPORT_VPN_TARGETS (.+)
+Value IMPORT_VPN_TARGETS (.+)
+
+Start
+  ^\s*VPN-Instance Name and ID : ${VPN_INSTANCE_NAME_AND_ID} -> Interfaces
+
+Interfaces
+  ^\s*Interfaces :\s+${INTERFACE}
+  ^\s+${INTERFACE} -> MoreInterfaces
+  ^\s*Address family ipv4 -> RouteDistinguishers
+
+MoreInterfaces
+  ^\s+${INTERFACE} -> MoreInterfaces
+  ^\s*Address family ipv4 -> RouteDistinguishers
+
+RouteDistinguishers
+  ^\s*Route Distinguisher : ${ROUTE_DISTINGUISHER}
+  ^\s*Export VPN Targets : ${EXPORT_VPN_TARGETS}
+  ^\s*Import VPN Targets : ${IMPORT_VPN_TARGETS} -> Start

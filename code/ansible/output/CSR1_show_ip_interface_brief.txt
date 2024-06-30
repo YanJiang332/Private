@@ -1,0 +1,5 @@
+['Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1       192.168.68.200  YES NVRAM  up                    up      
+GigabitEthernet2       10.1.1.1        YES manual up                    up      
+GigabitEthernet3       137.78.5.254    YES NVRAM  up                    up      
+Loopback0              1.1.1.1         YES NVRAM  up                    up']

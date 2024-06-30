@@ -1,0 +1,9 @@
+Value SLOT (\d+) 
+Value TYPE (\S+)
+Value CPU (\d+%) 
+Value MEM (\d+%) 
+Value USED (\d+MB) 
+Value TOTAL (\d+MB)
+
+Start 
+ ^${SLOT}\s+${TYPE}\s+${CPU}\s+${MEM}\s+${USED}\/${TOTAL} -> Record
